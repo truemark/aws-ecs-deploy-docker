@@ -131,7 +131,7 @@ NEW_DEFINITION=$(aws ecs register-task-definition \
   --cli-input-json "${NEW_DEFINITION}" \
   --output json)
 
-if [[ -n "${PRUNE_REPOSITORY_CREDENTIALS+x}" ]]; then
+if [[ "${PRUNE_REPOSITORY_CREDENTIALS+x}" == "true" ]]; then
   info "pruning repository credentials"
   NEW_DEFINITION=$(echo "${NEW_DEFINITION}" | jq -r "del(.containerDefinitions[0].repositoryCredentials)")
 fi
