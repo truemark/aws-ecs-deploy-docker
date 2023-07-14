@@ -127,14 +127,14 @@ NEW_DEFINITION=$(echo "${DEFINITION}" \
   | jq -r ".containerDefinitions[0].image = \"${IMAGE}\"" \
   | jq -r "del(.taskDefinitionArn)|del(.revision)|del(.status)|del(.compatibilities)|del(.requiresAttributes)|del(.registeredAt)|del(.registeredBy)")
 
-NEW_DEFINITION=$(aws ecs register-task-definition \
-  --cli-input-json "${NEW_DEFINITION}" \
-  --output json)
-
 if [[ -n "${PRUNE_REPOSITORY_CREDENTIALS+x}" ]] && [[ "${PRUNE_REPOSITORY_CREDENTIALS}" == "true" ]]; then
   info "pruning repository credentials"
   NEW_DEFINITION=$(echo "${NEW_DEFINITION}" | jq -r "del(.containerDefinitions[0].repositoryCredentials)")
 fi
+
+NEW_DEFINITION=$(aws ecs register-task-definition \
+  --cli-input-json "${NEW_DEFINITION}" \
+  --output json)
 
 NEW_DEFINITION_NAME=$(echo "${NEW_DEFINITION}" | jq -r '.taskDefinition.taskDefinitionArn' | sed 's/.*\///g')
 
