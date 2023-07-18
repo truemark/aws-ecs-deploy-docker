@@ -115,6 +115,8 @@ validate
 source /usr/local/bin/helper.sh
 aws_authentication
 
+info "locating task definition for service ${SERVICE} in cluster ${CLUSTER}"
+
 LATEST_DEFINITION=$(aws ecs describe-services --services "${SERVICE}" --cluster "${CLUSTER}" | jq -r .services[0].taskDefinition | sed 's/.*\///g')
 
 info "found task definition ${LATEST_DEFINITION}"
